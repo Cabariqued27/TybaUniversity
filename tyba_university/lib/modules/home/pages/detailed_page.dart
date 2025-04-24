@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,7 +57,7 @@ class DetailedPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: AppSize.width() * 0.15),
-                _userInformationWidget(),
+                _universityInformationWidget(),
               ],
             ),
           ),
@@ -64,18 +66,45 @@ class DetailedPage extends StatelessWidget {
     );
   }
 
-  Widget _userInformationWidget() {
+  Widget _universityInformationWidget() {
     return FadeIn(
       duration: const Duration(milliseconds: 1000),
       child: Column(
         children: [
           TextWidget(
-            '${controller.universityInformation?.name} ',
+            controller.universityInformation?.name ?? '',
             fontFamily: AppFontFamily.leagueSpartan,
             fontWeight: FontWeight.w600,
             dsize: RelSize(size: TextWidgetSizes.normal),
             color: controller.theme.black.value,
             textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+
+          // Mostrar imagen relacionada con la universidad seleccionada
+          controller.universityInformation?.imagePath?.isNotEmpty == true
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    File(controller.universityInformation!.imagePath!),
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : const Icon(Icons.image, size: 100, color: Colors.grey),
+
+          const SizedBox(height: 20),
+
+          // Botón para cambiar imagen
+          ElevatedButton.icon(
+            onPressed: controller.validatePhotosPermission,
+            icon: const Icon(Icons.upload_file),
+            label: const Text("Subir imagen"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: controller.theme.primary.value,
+              foregroundColor: Colors.white,
+            ),
           ),
         ],
       ),

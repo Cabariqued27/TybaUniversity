@@ -1,7 +1,13 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:tyba_university/preferences/user_preferences.dart';
 import 'package:tyba_university/services/models/university.dart';
 import 'package:tyba_university/theme/theme.dart';
+import 'package:tyba_university/utils/global/log_error_utils.dart';
 
 class DetailedController extends GetxController {
   final VoidCallback onNext;
@@ -19,15 +25,60 @@ class DetailedController extends GetxController {
   final firstNameInputController = TextEditingController();
   final lastNameInputController = TextEditingController();
   final emailNameInputController = TextEditingController();
+  final RxString image = ''.obs;
+
+  final _preferences = UserPreferences();
+  final ImagePicker _picker = ImagePicker();
 
   void startController() {
     loadingData();
-    loadingRegisterAt();
   }
 
   void loadingData() {
     update();
   }
 
-  Future<void> loadingRegisterAt() async {}
+  Future<void> validatePhotosPermission() async {
+    try {
+      bool granted = true;
+
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        final status = await Permission.photos.request();
+        if (!status.isGranted) {
+          await openAppSettings();
+          granted = false;
+        }
+      }
+
+      if (granted) {
+        await onChangeProfileImage();
+      }
+    } catch (e, stack) {
+      LogError.capture(e, stack, 'validatePhotosPermission');
+      Get.snackbar('Permiso denegado', 'No se pudo acceder a la galería');
+    }
+  }
+
+  Future<void> onChangeProfileImage() async {
+    try {
+      final fileData = await _picker.pickImage(source: ImageSource.gallery);
+
+      if (fileData != null) {
+        final file = File(fileData.path);
+
+        universityInformation?.imagePath = file.path;
+        _preferences.setImage = file.path;
+        image.value = file.path;
+
+        update();
+
+        Get.snackbar('Éxito', 'Imagen actualizada correctamente');
+      } else {
+        Get.snackbar('Cancelado', 'No se seleccionó ninguna imagen');
+      }
+    } catch (exception, stackTrace) {
+      LogError.capture(exception, stackTrace, 'onChangeProfileImage');
+      Get.snackbar('Error', 'No se pudo cambiar la imagen');
+    }
+  }
 }

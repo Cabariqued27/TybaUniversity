@@ -4,7 +4,7 @@ class AppLogos {
 }
 
 class AppIcons {
-  
+
 }
 
 class AppBackgrounds {

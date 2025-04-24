@@ -49,6 +49,7 @@ class AppTheme extends GetxController {
   var grayDark = const Color(0xff363636).obs;
   var preSessionColorTextRefresh = const Color(0xff5B967B).obs;
   var rightArrorExploreColor = const Color(0xffF6C3C7).obs;
+  var backgroundDeviceSetting = const Color(0xffF4F4F4).obs;
 
   var purpleMin = const Color(0xff917FB5).obs;
   var greenMin = const Color(0xff5AAFA9).obs;

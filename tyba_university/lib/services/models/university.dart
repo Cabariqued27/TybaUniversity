@@ -6,6 +6,7 @@ class University {
   final String? stateProvince;
   final List<String> domains;
   final List<String> webPages;
+  String? imagePath; // Ruta local de la imagen
 
   University({
     required this.name,
@@ -13,6 +14,7 @@ class University {
     required this.stateProvince,
     required this.domains,
     required this.webPages,
+    this.imagePath,
   });
 
   factory University.fromRawJson(String str) =>
@@ -21,19 +23,21 @@ class University {
   String toRawJson() => json.encode(toJson());
 
   factory University.fromJson(Map<String, dynamic> json) => University(
-      name: json["name"],
-      country: json["country"],
-      stateProvince: json["state-province"], 
-      domains: List<String>.from(json["domains"]),
-      webPages: List<String>.from(json["web_pages"]),
-    );
-
+        name: json["name"],
+        country: json["country"],
+        stateProvince: json["state-province"],
+        domains: List<String>.from(json["domains"]),
+        webPages: List<String>.from(json["web_pages"]),
+        imagePath: json["image_path"], 
+      );
 
   Map<String, dynamic> toJson() => {
-        "id": name,
+        "name": name,
         "country": country,
         "state-province": stateProvince,
         "domains": domains,
         "web_pages": webPages,
+        "image_path": imagePath, 
       };
 }
+

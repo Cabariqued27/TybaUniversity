@@ -40,6 +40,8 @@ dependencies:
   carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.2
   http: ^1.2.0
+  image_picker: ^1.0.7
+  permission_handler: ^11.3.1
   flutter_svg: ^2.0.9
   animate_do: ^3.3.4
   image_fade: ^0.6.2
