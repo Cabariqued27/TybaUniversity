@@ -126,7 +126,7 @@ class DetailedController extends GetxController {
     Get.snackbar('saved'.tr, 'student_number_updated'.tr);
   }
 
-  // Esta función se llama cuando el texto cambia
+ 
   void onStudentCountChanged(String input) {
     input = input.trim();
     if (input.isEmpty) {
