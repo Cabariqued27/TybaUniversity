@@ -24,7 +24,6 @@ class HomeController extends GetxController {
   final _apiService = ApiProvider();
   final ScrollController scrollController = ScrollController();
 
-
   void startController() async {
     await loadUniversities(isInitial: true);
     scrollController.addListener(() {

@@ -72,15 +72,17 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _toogle() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: IconButton(
-        icon: Icon(
-          controller.isGridView.value ? Icons.view_list : Icons.grid_view,
-          color: controller.theme.black.value,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          icon: Icon(
+            controller.isGridView.value ? Icons.view_list : Icons.grid_view,
+            color: controller.theme.black.value,
+          ),
+          onPressed: controller.toggleViewMode,
         ),
-        onPressed: controller.toggleViewMode,
-      ),
+      ],
     );
   }
 
@@ -89,47 +91,51 @@ class HomePage extends StatelessWidget {
     final isGrid = controller.isGridView.value;
     final hasMore = controller.hasMore.value;
 
+    Widget buildListItem(int index) {
+      if (index < universities.length) {
+        return isGrid
+            ? FadeIn(
+                duration: Duration(milliseconds: 300 + index * 50),
+                child: _universityItemGridWidget(universities[index]),
+              )
+            : SlideInUp(
+                duration: Duration(milliseconds: 300 + index * 50),
+                child: _universityItemWidget(universities[index]),
+              );
+      } else {
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 20.0),
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
+    }
+
+    Widget buildGridView() {
+      return GridView.builder(
+        controller: controller.scrollController,
+        padding: EdgeInsets.only(bottom: AppMargin.vertical() * 2),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 3,
+        ),
+        itemCount: universities.length + (hasMore ? 1 : 0),
+        itemBuilder: (context, index) => buildListItem(index),
+      );
+    }
+
+    Widget buildListView() {
+      return ListView.builder(
+        controller: controller.scrollController,
+        padding: EdgeInsets.only(bottom: AppMargin.vertical() * 2),
+        itemCount: universities.length + (hasMore ? 1 : 0),
+        itemBuilder: (context, index) => buildListItem(index),
+      );
+    }
+
     return Expanded(
-      child: isGrid
-          ? GridView.builder(
-              controller: controller.scrollController,
-              padding: EdgeInsets.only(bottom: AppMargin.vertical() * 2),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 3,
-              ),
-              itemCount: universities.length + (hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index < universities.length) {
-                  return FadeIn(
-                    duration: Duration(milliseconds: 300 + index * 50),
-                    child: _universityItemGridWidget(universities[index]),
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            )
-          : ListView.builder(
-              controller: controller.scrollController,
-              padding: EdgeInsets.only(bottom: AppMargin.vertical() * 2),
-              itemCount: universities.length + (hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index < universities.length) {
-                  return SlideInUp(
-                    duration: Duration(milliseconds: 300 + index * 50),
-                    child: _universityItemWidget(universities[index]),
-                  );
-                } else {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-              },
-            ),
+      child: isGrid ? buildGridView() : buildListView(),
     );
   }
 
