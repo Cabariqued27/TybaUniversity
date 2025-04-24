@@ -134,13 +134,56 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _universityItemWidget(University university) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: AppMargin.vertical(),
-        horizontal: AppMargin.horizontal(),
+    return InkWell(
+      onTap: () => controller.showUniversity(university),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: AppMargin.vertical(),
+          horizontal: AppMargin.horizontal(),
+        ),
+        child: Container(
+          padding: EdgeInsets.all(AppMargin.vertical()),
+          decoration: BoxDecoration(
+            color: controller.theme.white.value,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextWidget(
+                university.name,
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: TextWidgetWeight.bold,
+                dsize: RelSize(size: TextWidgetSizes.xxsmall),
+                color: controller.theme.black.value,
+              ),
+              const SizedBox(height: 4),
+              TextWidget(
+                university.country,
+                fontFamily: AppFontFamily.leagueSpartan,
+                dsize: RelSize(size: TextWidgetSizes.xxsmall),
+                color: controller.theme.black.value,
+              ),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _universityItemGridWidget(University university) {
+    return InkWell(
+      onTap: () => controller.showUniversity(university),
       child: Container(
-        padding: EdgeInsets.all(AppMargin.vertical()),
+        padding: EdgeInsets.only(top: AppMargin.vertical()),
+        height: AppSize.width() * 0.1,
         decoration: BoxDecoration(
           color: controller.theme.white.value,
           borderRadius: BorderRadius.circular(12),
@@ -153,7 +196,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextWidget(
               university.name,
@@ -161,54 +204,17 @@ class HomePage extends StatelessWidget {
               fontWeight: TextWidgetWeight.bold,
               dsize: RelSize(size: TextWidgetSizes.xxsmall),
               color: controller.theme.black.value,
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 4),
             TextWidget(
               university.country,
               fontFamily: AppFontFamily.leagueSpartan,
               dsize: RelSize(size: TextWidgetSizes.xxsmall),
               color: controller.theme.black.value,
+              textAlign: TextAlign.center,
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _universityItemGridWidget(University university) {
-    return Container(
-      padding: EdgeInsets.only(top: AppMargin.vertical()),
-      height: AppSize.width() * 0.1,
-      decoration: BoxDecoration(
-        color: controller.theme.white.value,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TextWidget(
-            university.name,
-            fontFamily: AppFontFamily.leagueSpartan,
-            fontWeight: TextWidgetWeight.bold,
-            dsize: RelSize(size: TextWidgetSizes.xxsmall),
-            color: controller.theme.black.value,
-            textAlign: TextAlign.center,
-          ),
-          TextWidget(
-            university.country,
-            fontFamily: AppFontFamily.leagueSpartan,
-            dsize: RelSize(size: TextWidgetSizes.xxsmall),
-            color: controller.theme.black.value,
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }

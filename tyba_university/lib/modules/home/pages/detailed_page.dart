@@ -70,7 +70,7 @@ class DetailedPage extends StatelessWidget {
       child: Column(
         children: [
           TextWidget(
-            '${controller.firstNameInputController.text} ${controller.lastNameInputController.text}',
+            '${controller.universityInformation?.name} ',
             fontFamily: AppFontFamily.leagueSpartan,
             fontWeight: FontWeight.w600,
             dsize: RelSize(size: TextWidgetSizes.normal),

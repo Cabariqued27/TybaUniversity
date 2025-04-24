@@ -6,8 +6,10 @@ import 'package:tyba_university/theme/theme.dart';
 
 class HomeController extends GetxController {
   final AppTheme theme;
+  final Function(University) onNext;
 
   HomeController({
+    required this.onNext,
     required this.theme,
   });
 
@@ -21,6 +23,7 @@ class HomeController extends GetxController {
   final universities = <University>[].obs;
   final _apiService = ApiProvider();
   final ScrollController scrollController = ScrollController();
+
 
   void startController() async {
     await loadUniversities(isInitial: true);
@@ -38,8 +41,8 @@ class HomeController extends GetxController {
     update();
   }
 
-  void showArena(item) {
-    //arenaUserFlow.startFields(item);
+  void showUniversity(University item) {
+    onNext(item);
   }
 
   var isGridView = false.obs;
