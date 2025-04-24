@@ -20,9 +20,7 @@ class DetailedController extends GetxController {
     this.universityInformation,
   });
 
-  final firstNameInputController = TextEditingController();
-  final lastNameInputController = TextEditingController();
-  final emailNameInputController = TextEditingController();
+  final studentCountController = TextEditingController();
   final RxString image = ''.obs;
 
   final _preferences = UserPreferences();
@@ -30,6 +28,14 @@ class DetailedController extends GetxController {
 
   void startController() {
     _loadImage();
+    _loadStudent();
+  }
+
+  void _loadStudent() {
+    if (universityInformation?.studentCount != null) {
+      studentCountController.text =
+          universityInformation!.studentCount.toString();
+    }
   }
 
   void _loadImage() {
@@ -44,23 +50,22 @@ class DetailedController extends GetxController {
       await _showImagePickerDialog();
     } catch (e, stack) {
       LogError.capture(e, stack, 'validatePhotosPermission');
-      Get.snackbar('Permiso denegado', 'No se pudo acceder a la galería');
+      Get.snackbar('permission_denied'.tr, 'could_not_access_gallery'.tr);
     }
   }
 
-  
   Future<void> _showImagePickerDialog() async {
     return showDialog<void>(
       context: Get.context!,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Selecciona una opción'),
+          title: Text('select_an_option'.tr),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
                 leading: const Icon(Icons.camera_alt),
-                title: const Text('Tomar foto'),
+                title: Text('take_photo'.tr),
                 onTap: () {
                   _pickImage(ImageSource.camera);
                   Navigator.of(context).pop();
@@ -68,7 +73,7 @@ class DetailedController extends GetxController {
               ),
               ListTile(
                 leading: const Icon(Icons.image),
-                title: const Text('Seleccionar de la galería'),
+                title: Text('choose_from_gallery'.tr),
                 onTap: () {
                   _pickImage(ImageSource.gallery);
                   Navigator.of(context).pop();
@@ -81,7 +86,6 @@ class DetailedController extends GetxController {
     );
   }
 
-  
   Future<void> _pickImage(ImageSource source) async {
     try {
       final fileData = await _picker.pickImage(source: source);
@@ -95,13 +99,32 @@ class DetailedController extends GetxController {
 
         update();
 
-        Get.snackbar('Éxito', 'Imagen actualizada correctamente');
+        Get.snackbar('success'.tr, 'image_updated_successfully'.tr);
       } else {
-        Get.snackbar('Cancelado', 'No se seleccionó ninguna imagen');
+        Get.snackbar('cancelled'.tr, 'no_image_selected'.tr);
       }
     } catch (exception, stackTrace) {
-      LogError.capture(exception, stackTrace, 'onChangeProfileImage');
-      Get.snackbar('Error', 'No se pudo cambiar la imagen');
+      LogError.capture(exception, stackTrace, '_pickImage');
+      Get.snackbar('error'.tr, 'could_not_change_image'.tr);
     }
+  }
+
+  void saveStudentCount() {
+    final input = studentCountController.text.trim();
+    if (input.isEmpty) {
+      Get.snackbar('required_field'.tr,
+          'please_enter_a_student_number'.tr);
+      return;
+    }
+
+    final parsed = int.tryParse(input);
+    if (parsed == null || parsed <= 0) {
+      Get.snackbar(
+          'invalid_value'.tr, 'enter_a_valid_number_greater_than_zero'.tr);
+      return;
+    }
+
+    universityInformation?.studentCount = parsed;
+    Get.snackbar('saved'.tr, 'student_number_updated'.tr);
   }
 }

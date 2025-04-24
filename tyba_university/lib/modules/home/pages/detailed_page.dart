@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tyba_university/modules/home/controllers/detailed_controller.dart';
 import 'package:tyba_university/utils/app/app_margin.dart';
@@ -9,6 +10,7 @@ import 'package:tyba_university/utils/app/app_size.dart';
 import 'package:tyba_university/widgets/responsive/responsive_widget.dart';
 import 'package:tyba_university/widgets/responsive/web_frame_widget.dart';
 import 'package:tyba_university/widgets/text/text_widget.dart';
+
 
 class DetailedPage extends StatelessWidget {
   final DetailedController controller;
@@ -67,12 +69,14 @@ class DetailedPage extends StatelessWidget {
   }
 
   Widget _universityInformationWidget() {
+    final info = controller.universityInformation;
+
     return FadeIn(
       duration: const Duration(milliseconds: 1000),
       child: Column(
         children: [
           TextWidget(
-            controller.universityInformation?.name ?? '',
+            info?.name ?? '',
             fontFamily: AppFontFamily.leagueSpartan,
             fontWeight: FontWeight.w600,
             dsize: RelSize(size: TextWidgetSizes.normal),
@@ -80,35 +84,89 @@ class DetailedPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
-
-         
-          Obx(
-            () => controller.image.value.isNotEmpty
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.file(
-                      File(controller.image.value),
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : const Icon(Icons.image, size: 100, color: Colors.grey),
-          ),
-
+          controller.image.value.isNotEmpty
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    File(controller.image.value),
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : const Icon(Icons.image, size: 100, color: Colors.grey),
           const SizedBox(height: 20),
-
           ElevatedButton.icon(
             onPressed: controller.validatePhotosPermission,
             icon: const Icon(Icons.upload_file),
-            label: const Text("Subir imagen"),
+            label: Text("upload_image".tr),
             style: ElevatedButton.styleFrom(
               backgroundColor: controller.theme.primary.value,
               foregroundColor: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _infoText("country".tr, info?.country),
+                _infoText("state_province".tr, info?.stateProvince),
+                _infoText("domains".tr, info?.domains.join(", ")),
+                _infoText("web_pages".tr, info?.webPages.join(", ")),
+                const SizedBox(height: 20),
+                Text(
+                  "number_of_students".tr,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: controller.studentCountController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: "ej_15000".tr,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: controller.saveStudentCount,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: controller.theme.primary.value,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: Text("save".tr),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
   }
+
+  Widget _infoText(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black),
+          children: [
+            TextSpan(
+              text: "$label: ",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text: value ?? "not_available".tr,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
+

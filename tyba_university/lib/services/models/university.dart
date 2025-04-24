@@ -6,7 +6,8 @@ class University {
   final String? stateProvince;
   final List<String> domains;
   final List<String> webPages;
-  String? imagePath; 
+  String? imagePath;
+  int? studentCount;  
 
   University({
     required this.name,
@@ -15,6 +16,7 @@ class University {
     required this.domains,
     required this.webPages,
     this.imagePath,
+    this.studentCount,  
   });
 
   factory University.fromRawJson(String str) =>
@@ -28,7 +30,8 @@ class University {
         stateProvince: json["state-province"],
         domains: List<String>.from(json["domains"]),
         webPages: List<String>.from(json["web_pages"]),
-        imagePath: json["image_path"], 
+        imagePath: json["image_path"],
+        studentCount: json["student_count"],  
       );
 
   Map<String, dynamic> toJson() => {
@@ -37,7 +40,7 @@ class University {
         "state-province": stateProvince,
         "domains": domains,
         "web_pages": webPages,
-        "image_path": imagePath, 
+        "image_path": imagePath,
+        "student_count": studentCount,  
       };
 }
-

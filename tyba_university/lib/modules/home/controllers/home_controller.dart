@@ -71,7 +71,7 @@ class HomeController extends GetxController {
 
       page.value++;
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('error'.tr, e.toString());
     } finally {
       isFetchingMore.value = false;
     }
