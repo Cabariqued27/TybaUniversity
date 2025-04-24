@@ -81,22 +81,23 @@ class DetailedPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          // Mostrar imagen relacionada con la universidad seleccionada
-          controller.universityInformation?.imagePath?.isNotEmpty == true
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    File(controller.universityInformation!.imagePath!),
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : const Icon(Icons.image, size: 100, color: Colors.grey),
+         
+          Obx(
+            () => controller.image.value.isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(
+                      File(controller.image.value),
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : const Icon(Icons.image, size: 100, color: Colors.grey),
+          ),
 
           const SizedBox(height: 20),
 
-          // Botón para cambiar imagen
           ElevatedButton.icon(
             onPressed: controller.validatePhotosPermission,
             icon: const Icon(Icons.upload_file),

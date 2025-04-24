@@ -6,7 +6,7 @@ class University {
   final String? stateProvince;
   final List<String> domains;
   final List<String> webPages;
-  String? imagePath; // Ruta local de la imagen
+  String? imagePath; 
 
   University({
     required this.name,

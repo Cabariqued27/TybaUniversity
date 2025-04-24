@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:tyba_university/preferences/user_preferences.dart';
 import 'package:tyba_university/services/models/university.dart';
 import 'package:tyba_university/theme/theme.dart';
@@ -31,28 +29,21 @@ class DetailedController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   void startController() {
-    loadingData();
+    _loadImage();
   }
 
-  void loadingData() {
-    update();
+  void _loadImage() {
+    String savedImagePath = universityInformation?.imagePath ?? '';
+    if (savedImagePath.isNotEmpty) {
+      image.value = savedImagePath;
+    } else if (universityInformation?.imagePath?.isNotEmpty == true) {
+      image.value = universityInformation!.imagePath!;
+    }
   }
 
   Future<void> validatePhotosPermission() async {
     try {
-      bool granted = true;
-
-      if (defaultTargetPlatform == TargetPlatform.iOS) {
-        final status = await Permission.photos.request();
-        if (!status.isGranted) {
-          await openAppSettings();
-          granted = false;
-        }
-      }
-
-      if (granted) {
-        await onChangeProfileImage();
-      }
+      await onChangeProfileImage();
     } catch (e, stack) {
       LogError.capture(e, stack, 'validatePhotosPermission');
       Get.snackbar('Permiso denegado', 'No se pudo acceder a la galería');
