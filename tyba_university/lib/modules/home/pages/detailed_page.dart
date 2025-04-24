@@ -82,7 +82,7 @@ class DetailedPage extends StatelessWidget {
             color: controller.theme.black.value,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppSize.height() * 0.01),
           controller.image.value.isNotEmpty
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(12),
@@ -94,7 +94,7 @@ class DetailedPage extends StatelessWidget {
                   ),
                 )
               : const Icon(Icons.image, size: 100, color: Colors.grey),
-          const SizedBox(height: 20),
+          SizedBox(height: AppSize.height() * 0.01),
           ElevatedButton.icon(
             onPressed: controller.validatePhotosPermission,
             icon: const Icon(Icons.upload_file),
@@ -104,7 +104,7 @@ class DetailedPage extends StatelessWidget {
               foregroundColor: Colors.white,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppSize.height() * 0.01),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,7 +112,7 @@ class DetailedPage extends StatelessWidget {
               _infoText("state_province".tr, info?.stateProvince),
               _infoText("domains".tr, info?.domains.join(", ")),
               _infoText("web_pages".tr, info?.webPages.join(", ")),
-              const SizedBox(height: 20),
+              SizedBox(height: AppSize.height() * 0.01),
               TextWidget(
                 "number_of_students".tr,
                 fontFamily: AppFontFamily.workSans,
@@ -120,6 +120,7 @@ class DetailedPage extends StatelessWidget {
               TextField(
                 controller: controller.studentCountController,
                 keyboardType: TextInputType.number,
+                onChanged: controller.onStudentCountChanged,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                 ],
@@ -131,7 +132,7 @@ class DetailedPage extends StatelessWidget {
               SingleButtonWidget(
                 onPressed: controller.saveStudentCount,
                 title: "save".tr,
-                isActive: true,
+                isActive: controller.isStudentCountValid.value,
                 backgroundColor: controller.theme.primary.value,
                 textColor: controller.theme.white.value,
                 fontFamily: AppFontFamily.workSans,

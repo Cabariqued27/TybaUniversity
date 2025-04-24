@@ -21,6 +21,7 @@ class DetailedController extends GetxController {
 
   final studentCountController = TextEditingController();
   final RxString image = ''.obs;
+  var isStudentCountValid = false.obs;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -123,5 +124,16 @@ class DetailedController extends GetxController {
 
     universityInformation?.studentCount = parsed;
     Get.snackbar('saved'.tr, 'student_number_updated'.tr);
+  }
+
+  // Esta función se llama cuando el texto cambia
+  void onStudentCountChanged(String input) {
+    input = input.trim();
+    if (input.isEmpty) {
+      isStudentCountValid.value = false;
+    } else {
+      final parsed = int.tryParse(input);
+      isStudentCountValid.value = parsed != null && parsed > 0;
+    }
   }
 }
