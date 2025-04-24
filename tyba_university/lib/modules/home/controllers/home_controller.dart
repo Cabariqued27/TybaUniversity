@@ -18,6 +18,7 @@ class HomeController extends GetxController {
   var isLoadData = false.obs;
   var isFetchingMore = false.obs;
   var hasMore = true.obs;
+  var isGridView = false.obs;
   var page = 1.obs;
 
   final universities = <University>[].obs;
@@ -43,8 +44,6 @@ class HomeController extends GetxController {
   void showUniversity(University item) {
     onNext(item);
   }
-
-  var isGridView = false.obs;
 
   void toggleViewMode() {
     isGridView.value = !isGridView.value;
