@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tyba_university/preferences/user_preferences.dart';
 
 
 class AppDependencies {
@@ -7,7 +6,7 @@ class AppDependencies {
     WidgetsFlutterBinding.ensureInitialized();
     //AppSetting().startEnv();
     //await startFirebase();
-    await UserPreferences().initPrefs();
+    //await UserPreferences().initPrefs();
     //await SupabaseConnection().startConexion();
 
   }

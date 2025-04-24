@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tyba_university/preferences/user_preferences.dart';
 import 'package:tyba_university/services/models/university.dart';
 import 'package:tyba_university/theme/theme.dart';
 import 'package:tyba_university/utils/global/log_error_utils.dart';
@@ -23,7 +22,6 @@ class DetailedController extends GetxController {
   final studentCountController = TextEditingController();
   final RxString image = ''.obs;
 
-  final _preferences = UserPreferences();
   final ImagePicker _picker = ImagePicker();
 
   void startController() {
@@ -94,7 +92,7 @@ class DetailedController extends GetxController {
         final file = File(fileData.path);
 
         universityInformation?.imagePath = file.path;
-        _preferences.setImage = file.path;
+
         image.value = file.path;
 
         update();
@@ -112,8 +110,7 @@ class DetailedController extends GetxController {
   void saveStudentCount() {
     final input = studentCountController.text.trim();
     if (input.isEmpty) {
-      Get.snackbar('required_field'.tr,
-          'please_enter_a_student_number'.tr);
+      Get.snackbar('required_field'.tr, 'please_enter_a_student_number'.tr);
       return;
     }
 
