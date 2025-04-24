@@ -81,7 +81,7 @@ class DetailedController extends GetxController {
     );
   }
 
-  // Función para manejar la toma de foto o selección de imagen
+  
   Future<void> _pickImage(ImageSource source) async {
     try {
       final fileData = await _picker.pickImage(source: source);
