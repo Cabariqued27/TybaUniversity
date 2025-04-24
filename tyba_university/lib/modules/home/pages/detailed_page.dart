@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tyba_university/modules/home/controllers/detailed_controller.dart';
+import 'package:tyba_university/services/models/university.dart';
 import 'package:tyba_university/utils/app/app_margin.dart';
 import 'package:tyba_university/utils/app/app_size.dart';
 import 'package:tyba_university/widgets/buttons/single_button_widget.dart';
@@ -22,16 +23,13 @@ class DetailedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      desktop: WebFrameWidget(
-        child: _mobileContent(),
-      ),
-      tablet: WebFrameWidget(
-        child: _mobileContent(),
-      ),
+      desktop: WebFrameWidget(child: _mobileContent()),
+      tablet: WebFrameWidget(child: _mobileContent()),
       mobile: _mobileContent(),
     );
   }
 
+ 
   Widget _mobileContent() {
     return Obx(
       () => Scaffold(
@@ -40,6 +38,7 @@ class DetailedPage extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _pageWidget() {
     return SizedBox(
@@ -67,6 +66,7 @@ class DetailedPage extends StatelessWidget {
     );
   }
 
+  
   Widget _universityInformationWidget() {
     final info = controller.universityInformation;
 
@@ -74,78 +74,77 @@ class DetailedPage extends StatelessWidget {
       duration: const Duration(milliseconds: 1000),
       child: Column(
         children: [
-          TextWidget(
-            info?.name ?? '',
-            fontFamily: AppFontFamily.leagueSpartan,
-            fontWeight: FontWeight.w600,
-            dsize: RelSize(size: TextWidgetSizes.normal),
-            color: controller.theme.black.value,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: AppSize.height() * 0.01),
-          controller.image.value.isNotEmpty
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    File(controller.image.value),
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : const Icon(Icons.image, size: 100, color: Colors.grey),
-          SizedBox(height: AppSize.height() * 0.01),
-          ElevatedButton.icon(
-            onPressed: controller.validatePhotosPermission,
-            icon: const Icon(Icons.upload_file),
-            label: Text("upload_image".tr),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: controller.theme.primary.value,
-              foregroundColor: Colors.white,
-            ),
-          ),
-          SizedBox(height: AppSize.height() * 0.01),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _infoText("country".tr, info?.country),
-              _infoText("state_province".tr, info?.stateProvince),
-              _infoText("domains".tr, info?.domains.join(", ")),
-              _infoText("web_pages".tr, info?.webPages.join(", ")),
-              SizedBox(height: AppSize.height() * 0.01),
-              TextWidget(
-                "number_of_students".tr,
-                fontFamily: AppFontFamily.workSans,
-              ),
-              TextField(
-                controller: controller.studentCountController,
-                keyboardType: TextInputType.number,
-                onChanged: controller.onStudentCountChanged,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: "ej_15000".tr,
-                ),
-              ),
-              SingleButtonWidget(
-                onPressed: controller.saveStudentCount,
-                title: "save".tr,
-                isActive: controller.isStudentCountValid.value,
-                backgroundColor: controller.theme.primary.value,
-                textColor: controller.theme.white.value,
-                fontFamily: AppFontFamily.workSans,
-                height: AppSize.width() * 0.1,
-                width: AppSize.width() * 0.5,
-              ),
-            ],
-          ),
+          _universityName(info),
+          _universityImage(info),
+          SizedBox(height: AppSize.width()*0.01),
+          _uploadButton(),
+           SizedBox(height: AppSize.width()*0.01),
+          _universityDetails(info),
         ],
       ),
     );
   }
 
+ 
+  Widget _universityName(University? info) {
+    return TextWidget(
+      info?.name ?? '',
+      fontFamily: AppFontFamily.leagueSpartan,
+      fontWeight: FontWeight.w600,
+      dsize: RelSize(size: TextWidgetSizes.normal),
+      color: controller.theme.black.value,
+      textAlign: TextAlign.center,
+    );
+  }
+
+
+  Widget _universityImage(University? info) {
+    return SizedBox(
+      height: AppSize.height() * 0.1,
+      child: controller.image.value.isNotEmpty
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.file(
+                File(controller.image.value),
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            )
+          : const Icon(Icons.image, size: 100, color: Colors.grey),
+    );
+  }
+
+
+  Widget _uploadButton() {
+    return SizedBox(
+      height: AppSize.height() * 0.05,
+      child: ElevatedButton.icon(
+        onPressed: controller.validatePhotosPermission,
+        icon: const Icon(Icons.upload_file),
+        label: Text("upload_image".tr),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: controller.theme.primary.value,
+          foregroundColor: Colors.white,
+        ),
+      ),
+    );
+  }
+
+ 
+  Widget _universityDetails(University? info) {
+    return Column(
+      children: [
+        _infoText("country".tr, info?.country),
+        _infoText("state_province".tr, info?.stateProvince),
+        _infoText("domains".tr, info?.domains.join(", ")),
+        _infoText("web_pages".tr, info?.webPages.join(", ")),
+        _studentCountInput(),
+      ],
+    );
+  }
+
+ 
   Widget _infoText(String label, String? value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -163,6 +162,41 @@ class DetailedPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _studentCountInput() {
+    return Column(
+      children: [
+        SizedBox(height: AppSize.height() * 0.01),
+        TextWidget(
+          "number_of_students".tr,
+          fontFamily: AppFontFamily.workSans,
+        ),
+        TextField(
+          controller: controller.studentCountController,
+          keyboardType: TextInputType.number,
+          onChanged: controller.onStudentCountChanged,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+          ],
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            hintText: "ej_15000".tr,
+          ),
+        ),
+        SizedBox(height: AppSize.height() * 0.01),
+        SingleButtonWidget(
+          onPressed: controller.saveStudentCount,
+          title: "save".tr,
+          isActive: controller.isStudentCountValid.value,
+          backgroundColor: controller.theme.primary.value,
+          textColor: controller.theme.white.value,
+          fontFamily: AppFontFamily.workSans,
+          height: AppSize.width() * 0.1,
+          width: AppSize.width() * 0.5,
+        ),
+      ],
     );
   }
 }
