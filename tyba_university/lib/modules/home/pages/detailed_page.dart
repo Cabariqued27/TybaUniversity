@@ -6,10 +6,10 @@ import 'package:get/get.dart';
 import 'package:tyba_university/modules/home/controllers/detailed_controller.dart';
 import 'package:tyba_university/utils/app/app_margin.dart';
 import 'package:tyba_university/utils/app/app_size.dart';
+import 'package:tyba_university/widgets/buttons/single_button_widget.dart';
 import 'package:tyba_university/widgets/responsive/responsive_widget.dart';
 import 'package:tyba_university/widgets/responsive/web_frame_widget.dart';
 import 'package:tyba_university/widgets/text/text_widget.dart';
-
 
 class DetailedPage extends StatelessWidget {
   final DetailedController controller;
@@ -105,43 +105,40 @@ class DetailedPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _infoText("country".tr, info?.country),
-                _infoText("state_province".tr, info?.stateProvince),
-                _infoText("domains".tr, info?.domains.join(", ")),
-                _infoText("web_pages".tr, info?.webPages.join(", ")),
-                const SizedBox(height: 20),
-                Text(
-                  "number_of_students".tr,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _infoText("country".tr, info?.country),
+              _infoText("state_province".tr, info?.stateProvince),
+              _infoText("domains".tr, info?.domains.join(", ")),
+              _infoText("web_pages".tr, info?.webPages.join(", ")),
+              const SizedBox(height: 20),
+              TextWidget(
+                "number_of_students".tr,
+                fontFamily: AppFontFamily.workSans,
+              ),
+              TextField(
+                controller: controller.studentCountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  hintText: "ej_15000".tr,
                 ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: controller.studentCountController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    hintText: "ej_15000".tr,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: controller.saveStudentCount,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: controller.theme.primary.value,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text("save".tr),
-                ),
-              ],
-            ),
+              ),
+              SingleButtonWidget(
+                onPressed: controller.saveStudentCount,
+                title: "save".tr,
+                isActive: true,
+                backgroundColor: controller.theme.primary.value,
+                textColor: controller.theme.white.value,
+                fontFamily: AppFontFamily.workSans,
+                height: AppSize.width() * 0.1,
+                width: AppSize.width() * 0.5,
+              ),
+            ],
           ),
         ],
       ),
@@ -168,4 +165,3 @@ class DetailedPage extends StatelessWidget {
     );
   }
 }
-

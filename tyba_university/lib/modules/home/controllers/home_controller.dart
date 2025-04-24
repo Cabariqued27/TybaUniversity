@@ -16,20 +16,19 @@ class HomeController extends GetxController {
   final searchController = TextEditingController();
 
   var isLoadData = false.obs;
-  var isFetchingMore = false.obs;
-  var hasMore = true.obs;
   var isGridView = false.obs;
-  var page = 1.obs;
-
   final universities = <University>[].obs;
   final _apiService = ApiProvider();
   final ScrollController scrollController = ScrollController();
+  final PaginationController paginationController = PaginationController();
 
   void startController() async {
     await loadUniversities(isInitial: true);
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
-          scrollController.position.maxScrollExtent - 100) {
+              scrollController.position.maxScrollExtent - 100 &&
+          !paginationController.isFetchingMore.value &&
+          paginationController.hasMore.value) {
         loadUniversities();
       }
     });
@@ -38,7 +37,6 @@ class HomeController extends GetxController {
 
   void updateLoadData(bool value) {
     isLoadData.value = value;
-    update();
   }
 
   void showUniversity(University item) {
@@ -50,26 +48,37 @@ class HomeController extends GetxController {
   }
 
   Future<void> loadUniversities({bool isInitial = false}) async {
-    if (isFetchingMore.value || !hasMore.value) return;
+    List<University> fetched = await paginationController.loadPage(_apiService);
+
+    if (fetched.isEmpty) return;
+
+    if (isInitial) {
+      universities.assignAll(fetched);
+    } else {
+      universities.addAll(fetched);
+    }
+  }
+}
+
+class PaginationController extends GetxController {
+  var isFetchingMore = false.obs;
+  var hasMore = true.obs;
+  var page = 1.obs;
+
+  Future<List<University>> loadPage(ApiProvider apiService) async {
+    if (isFetchingMore.value || !hasMore.value) return [];
 
     isFetchingMore.value = true;
-
     try {
-      final fetched = await _apiService.fetchUniversities(page: page.value);
-
+      final fetched = await apiService.fetchUniversities(page: page.value);
       if (fetched.isEmpty || fetched.length < 20) {
         hasMore.value = false;
       }
-
-      if (isInitial) {
-        universities.assignAll(fetched);
-      } else {
-        universities.addAll(fetched);
-      }
-
       page.value++;
+      return fetched;
     } catch (e) {
-      Get.snackbar('error'.tr, e.toString());
+      Get.snackbar('error.tr', 'Ha ocurrido un error al cargar las universidades.');
+      return [];
     } finally {
       isFetchingMore.value = false;
     }

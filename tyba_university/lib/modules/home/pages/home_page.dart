@@ -89,7 +89,7 @@ class HomePage extends StatelessWidget {
   Widget _universitiesListWidget() {
     final universities = controller.universities;
     final isGrid = controller.isGridView.value;
-    final hasMore = controller.hasMore.value;
+    final hasMore = controller.paginationController.hasMore.value; 
 
     Widget buildListItem(int index) {
       if (index < universities.length) {
