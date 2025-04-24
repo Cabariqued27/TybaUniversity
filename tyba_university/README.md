@@ -1,16 +1,32 @@
 # tyba_university
 
-A new Flutter project.
-
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+## Required flutter version
 
-A few resources to get you started if this is your first Flutter project:
+This is the minimum version of flutter needed to run the project
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Flutter 3.16.9
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Install dependencies
+
+You must install fvm to handle the different versions of flutter
+
+https://fvm.app/documentation/getting-started/installation
+
+brew tap leoafarias/fvm
+brew install fvm
+
+fvm use 3.16.9
+
+The project uses make files to be able to make a dynamic configuration of 
+bundle ids and application names, you can install it this way
+
+brew install make
+
+The project uses a dependency to be able to rename the application and to
+be able to paint the app with different styles, for this RENAME must be installed
+
+https://pub.dev/packages/rename
+
+fvm flutter pub global activate rename
