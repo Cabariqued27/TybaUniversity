@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     SystemChrome.setPreferredOrientations(orientation);
 
     return GetMaterialApp(
-      title: 'Rick and Morty',
+      title: 'Tyba University',
       navigatorKey: navigatorKey,
       initialBinding: InitialBinding(),
       debugShowCheckedModeBanner: false,
